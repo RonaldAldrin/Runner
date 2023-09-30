@@ -26,19 +26,14 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SpawnItems();
 
-	
+	UFUNCTION()
+	void DestroyFloorTile();
 
 protected:
 	virtual void BeginPlay() override;
 
 	UFUNCTION()
 	void OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
-	UFUNCTION()
-	void DestroyFloorTile();
-
-	UFUNCTION()
-	void DestroyCoinObstacle();
 
 	UFUNCTION()
 	void SpawnLaneItems(UArrowComponent* Lane, int32& NumBig);
@@ -97,6 +92,8 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	float SpawnPercent3 = 0.5f;
+
+	TArray<AActor*> ChildActors;
 
 public:	
 	

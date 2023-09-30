@@ -14,6 +14,8 @@ class UUserWidget;
 class UGameHUD;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCoinsCountChanged, int32, CoinsCount);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLivesCountChanged, int32, LivesCount);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnLevelReset);
 
 UCLASS()
 class RUNNER_API ARunnerGameModeBase : public AGameModeBase
@@ -35,9 +37,18 @@ public:
 
 	void AddCoin();
 
+	void PlayerDied();
+
+	void RemoveTile(AFloorTile* Tile);
+
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "Delegates")
+	FOnLevelReset OnLevelReset;
 
 	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "Delegates")
 	FOnCoinsCountChanged OnCoinsCountChanged;
+
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "Delegates")
+	FOnLivesCountChanged OnLivesCountChanged;
 
 	UPROPERTY(EditAnywhere, Category = "Config")
 	TSubclassOf<UUserWidget> GameHUDClass;
@@ -57,7 +68,13 @@ public:
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly,Category = "Runtime")
 	TArray<float> LaneSwitchValues;
 
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Runtime")
+	TArray<AFloorTile*> FloorTiles;
+
 	int32 TotalCoins = 0;
 
+	int32 NumberOfLives = 0;
 
+	UPROPERTY(EditAnywhere)
+	int32 MaxLives = 3;
 };

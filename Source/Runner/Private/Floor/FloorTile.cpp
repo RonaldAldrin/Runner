@@ -61,9 +61,7 @@ void AFloorTile::OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* 
 		RunGameMode->AddFloorTile(true);
 
 
-		GetWorldTimerManager().SetTimer(CoinObstacleTimer, this, &ThisClass::DestroyCoinObstacle, 12.f, false);
-		GetWorldTimerManager().SetTimer(DestroyTimerHandle,this,&ThisClass::DestroyFloorTile,2.f,false);
-		
+		GetWorldTimerManager().SetTimer(DestroyTimerHandle, this, &ThisClass::DestroyFloorTile, 1.f, false);
 	}
 }
 
@@ -76,37 +74,21 @@ void AFloorTile::DestroyFloorTile()
 		GetWorldTimerManager().ClearTimer(DestroyTimerHandle);
 	}
 
+	for (AActor* Child : ChildActors)
+	{
+		if (Child)
+		{
+			Child->Destroy();
+		}
+	}
+
+	ChildActors.Empty();
+
+	RunGameMode->RemoveTile(this);
+
 	this->Destroy();
 
 }
-
-void AFloorTile::DestroyCoinObstacle()
-{
-	if (DestroyTimerHandle.IsValid())
-	{
-		GetWorldTimerManager().ClearTimer(CoinObstacleTimer);
-	}
-	if (Coin)
-	{
-		AActor* CoinToDestroy = UGameplayStatics::GetActorOfClass(this, CoinClass);
-		if (CoinToDestroy)
-		{
-			CoinToDestroy->Destroy();
-		}
-	}
-	if (Obstacle)
-	{
-		AActor* SmallObstacle = UGameplayStatics::GetActorOfClass(this, SmallObstacleClass);
-		AActor* BigObstacle = UGameplayStatics::GetActorOfClass(this, BigObstacleClass);
-
-		if (SmallObstacle || BigObstacle)
-		{
-			SmallObstacle->Destroy();
-			BigObstacle->Destroy();
-		}
-	}
-}
-
 
 const FTransform& AFloorTile::GetAttachPointTransform() const
 {
@@ -139,6 +121,7 @@ void AFloorTile::SpawnLaneItems(UArrowComponent* Lane, int32& NumBig)
 	if (UKismetMathLibrary::InRange_FloatFloat(RandVal, SpawnPercent1, SpawnPercent2, true, true))// same as RandVal >= 0.5f && RandVal <= 1.f
 	{
 		Obstacle = GetWorld()->SpawnActor<AObstacle>(SmallObstacleClass, SpawnLocation, SpawnParams);
+		ChildActors.Add(Obstacle);
 		
 	}
 	else if (UKismetMathLibrary::InRange_FloatFloat(RandVal, SpawnPercent2, SpawnPercent3, true, true))
@@ -148,16 +131,19 @@ void AFloorTile::SpawnLaneItems(UArrowComponent* Lane, int32& NumBig)
 		if (NumBig <= 2)
 		{
 			Obstacle = GetWorld()->SpawnActor<AObstacle>(BigObstacleClass, SpawnLocation, SpawnParams);
+			ChildActors.Add(Obstacle);
 		}
 		else if(NumBig == 3)
 		{
 			Obstacle = GetWorld()->SpawnActor<AObstacle>(SmallObstacleClass, SpawnLocation, SpawnParams);
+			ChildActors.Add(Obstacle);
 		}
 		
 	}
 	else if (UKismetMathLibrary::InRange_FloatFloat(RandVal, SpawnPercent3, 1.f, true, true))
 	{
 		Coin = GetWorld()->SpawnActor<ACoin>(CoinClass, SpawnLocation, SpawnParams);
+		ChildActors.Add(Coin);
 	}
 }
 

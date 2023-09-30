@@ -20,6 +20,8 @@ void ARunnerGameModeBase::BeginPlay()
 	GameHUD->InitializedHUD(this);
 	GameHUD->AddToViewport();
 
+	NumberOfLives = MaxLives;
+
 	CreateInitialFloorTiles();
 }
 
@@ -56,6 +58,8 @@ AFloorTile* ARunnerGameModeBase::AddFloorTile(const bool bSpawnItems)
 		AFloorTile* Tile = World->SpawnActor<AFloorTile>(FloorTileClass,NextSpawnPoint);
 		if (Tile)
 		{
+			FloorTiles.Add(Tile);
+
 			if (bSpawnItems)
 			{
 				Tile->SpawnItems();
@@ -73,9 +77,50 @@ void ARunnerGameModeBase::AddCoin()
 	TotalCoins += 1;
 
 	GameHUD->SetCoinsCount(TotalCoins);
+	OnCoinsCountChanged.Broadcast(TotalCoins); 
+
 
 	/*FString Coin = FString::Printf(TEXT("%d"), TotalCoins);
 	GameHUD->CoinsCount->SetText(FText::FromString(Coin));*/
 
 	//UE_LOG(LogTemp, Warning, TEXT("TotalCoin : %d"), TotalCoins);
+}
+
+void ARunnerGameModeBase::PlayerDied()
+{
+	NumberOfLives--;
+
+	GameHUD->SetLivesCount(NumberOfLives);
+	OnLivesCountChanged.Broadcast(NumberOfLives); 
+	if (NumberOfLives > 0)
+	{
+		// Iterate all FloorTiles and call DestroyFloorTile
+
+		for (AFloorTile* Tile : FloorTiles)
+		{
+			Tile->DestroyFloorTile();
+		}
+
+	
+		// Empty our array
+		FloorTiles.Empty();
+
+		// NextSpawnPoint to initial value
+		NextSpawnPoint = FTransform();
+
+		// create out initial floor tiles
+		CreateInitialFloorTiles();
+
+		// Broadcast level reset event
+		OnLevelReset.Broadcast();
+	}
+	else
+	{
+		// GameOver();
+	}
+}
+
+void ARunnerGameModeBase::RemoveTile(AFloorTile* Tile)
+{
+	FloorTiles.Remove(Tile);
 }

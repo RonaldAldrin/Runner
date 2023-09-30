@@ -33,8 +33,13 @@ public:
 
 	void SetCoinsCount(const int32 Coin);
 
+	void SetLivesCount(int32 Lives);
+
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* CoinsCount;
+
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* LivesCount;
 	
 	UPROPERTY(meta = (BindWidget))
 	class UButton* PauseButton;

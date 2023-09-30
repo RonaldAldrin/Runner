@@ -16,6 +16,7 @@
 #include "Particles/ParticleSystem.h"
 #include "Sound/SoundCue.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/PlayerStart.h"
 
 
 ARunCharacter::ARunCharacter()
@@ -57,6 +58,10 @@ void ARunCharacter::BeginPlay()
 
 	RunGameMode = Cast<ARunnerGameModeBase>(UGameplayStatics::GetGameMode(this));
 	check(RunGameMode);
+
+	RunGameMode->OnLevelReset.AddDynamic(this, &ThisClass::ResetLevel);
+
+	PlayerStart = Cast<APlayerStart>(UGameplayStatics::GetActorOfClass(GetWorld(), APlayerStart::StaticClass()));
 
 	if (APlayerController* PC = Cast<APlayerController>(Controller))
 	{
@@ -167,6 +172,23 @@ void ARunCharacter::MoveDown()
 	//UE_LOG(LogTemp, Warning, TEXT("S button is pressed"));
 }
 
+void ARunCharacter::ResetLevel()
+{
+	bIsDead = false;
+	EnableInput(nullptr);
+	GetMesh()->SetVisibility(true);
+
+	if (PlayerStart)
+	{
+		SetActorLocation(PlayerStart->GetActorLocation());
+		SetActorRotation(PlayerStart->GetActorRotation());
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Invalid PlayerStart"));
+	}
+}
+
 void ARunCharacter::Die()
 {
 	if (bIsDead) return;
@@ -196,13 +218,19 @@ void ARunCharacter::Die()
 
 void ARunCharacter::OnDeathFinished()
 {
+	bIsDead = false;
 	if (DeathTimer.IsValid())
 	{
 		GetWorldTimerManager().ClearTimer(DeathTimer);
 	}
-	UKismetSystemLibrary::ExecuteConsoleCommand(GetWorld(), TEXT("RestartLevel"));
-	//UGameplayStatics::OpenLevel(this, FName("TestMap"));
-	bIsDead = false;
+
+	RunGameMode->PlayerDied();
+
+
+
+	//UKismetSystemLibrary::ExecuteConsoleCommand(GetWorld(), TEXT("RestartLevel")); //UGameplayStatics::OpenLevel(this, FName("TestMap")); same
+	
+	
 }
 
 void ARunCharacter::AddCoin()

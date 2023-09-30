@@ -16,6 +16,7 @@ class UCurveFloat;
 class ARunnerGameModeBase;
 class UParticleSystem;
 class USoundCue;
+class APlayerStart;
 
 UCLASS()
 class RUNNER_API ARunCharacter : public ACharacter
@@ -63,6 +64,11 @@ protected:
 	void MoveRight();
 
 	void MoveDown();
+
+	UFUNCTION()
+	void ResetLevel();
+
+	APlayerStart* PlayerStart;
 
 private:
 
