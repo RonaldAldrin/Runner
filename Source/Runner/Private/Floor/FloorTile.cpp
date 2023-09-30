@@ -143,7 +143,7 @@ void AFloorTile::SpawnLaneItems(UArrowComponent* Lane, int32& NumBig)
 	}
 	else if (UKismetMathLibrary::InRange_FloatFloat(RandVal, SpawnPercent2, SpawnPercent3, true, true))
 	{
-		NumBig += 1;
+		NumBig++;
 		UE_LOG(LogTemp, Warning, TEXT("NumBig: %d"), NumBig)
 		if (NumBig <= 2)
 		{
