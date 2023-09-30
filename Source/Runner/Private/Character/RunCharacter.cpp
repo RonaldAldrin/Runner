@@ -15,6 +15,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystem.h"
 #include "Sound/SoundCue.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 
 ARunCharacter::ARunCharacter()
@@ -160,6 +161,9 @@ void ARunCharacter::MoveRight()
 
 void ARunCharacter::MoveDown()
 {
+	static FVector Impulse = FVector(0.0f, 0.0f, MoveDownImpulse);
+	GetCharacterMovement()->AddImpulse(Impulse, true);
+
 	//UE_LOG(LogTemp, Warning, TEXT("S button is pressed"));
 }
 

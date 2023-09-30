@@ -107,6 +107,9 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Config")
 	USoundCue* DeathSound;
 
+	UPROPERTY(EditAnywhere,Category = "Config")
+	float MoveDownImpulse = -1000.f;
+
 public:	
 
 	FORCEINLINE ARunnerGameModeBase* GetRunGameMode() const { return RunGameMode; }

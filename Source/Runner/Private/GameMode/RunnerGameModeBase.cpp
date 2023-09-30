@@ -4,10 +4,22 @@
 #include "GameMode/RunnerGameModeBase.h"
 #include "Floor/FloorTile.h"
 #include "Components/ArrowComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "UMG/GameHUD.h"
+#include "Components/TextBlock.h"
 
 void ARunnerGameModeBase::BeginPlay()
 {
 	Super::BeginPlay();
+
+	UGameplayStatics::GetPlayerController(this, 0)->bShowMouseCursor = true;
+
+	GameHUD = Cast<UGameHUD>(CreateWidget(GetWorld(), GameHUDClass));
+	check(GameHUD);
+
+	GameHUD->InitializedHUD(this);
+	GameHUD->AddToViewport();
+
 	CreateInitialFloorTiles();
 }
 
@@ -60,5 +72,10 @@ void ARunnerGameModeBase::AddCoin()
 {
 	TotalCoins += 1;
 
-	UE_LOG(LogTemp, Warning, TEXT("TotalCoin : %d"), TotalCoins);
+	GameHUD->SetCoinsCount(TotalCoins);
+
+	/*FString Coin = FString::Printf(TEXT("%d"), TotalCoins);
+	GameHUD->CoinsCount->SetText(FText::FromString(Coin));*/
+
+	//UE_LOG(LogTemp, Warning, TEXT("TotalCoin : %d"), TotalCoins);
 }

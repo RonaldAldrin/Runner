@@ -10,6 +10,10 @@
  * 
  */
 class AFloorTile;
+class UUserWidget;
+class UGameHUD;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCoinsCountChanged, int32, CoinsCount);
 
 UCLASS()
 class RUNNER_API ARunnerGameModeBase : public AGameModeBase
@@ -31,8 +35,18 @@ public:
 
 	void AddCoin();
 
+
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "Delegates")
+	FOnCoinsCountChanged OnCoinsCountChanged;
+
+	UPROPERTY(EditAnywhere, Category = "Config")
+	TSubclassOf<UUserWidget> GameHUDClass;
+
 	UPROPERTY(EditAnywhere, Category = "Config")
 	TSubclassOf<AFloorTile> FloorTileClass;
+
+	UPROPERTY(VisibleInstanceOnly, Category = "Config")
+	UGameHUD* GameHUD;
 
 	UPROPERTY(EditAnywhere, Category = "Config")
 	int32 NumInitialFloorTiles = 10;

@@ -49,7 +49,7 @@ void AFloorTile::BeginPlay()
 	check(RunGameMode);
 
 	FloorTriggerBox->OnComponentBeginOverlap.AddDynamic(this, &ThisClass::OnBoxOverlap);
-	GetWorldTimerManager().SetTimer(CoinObstacleTimer, this, &ThisClass::DestroyCoinObstacle, 12.f, false);
+	
 }
 
 
@@ -59,8 +59,10 @@ void AFloorTile::OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* 
 	if (Character)
 	{
 		RunGameMode->AddFloorTile(true);
+
+
+		GetWorldTimerManager().SetTimer(CoinObstacleTimer, this, &ThisClass::DestroyCoinObstacle, 12.f, false);
 		GetWorldTimerManager().SetTimer(DestroyTimerHandle,this,&ThisClass::DestroyFloorTile,2.f,false);
-		
 		
 	}
 }
@@ -115,15 +117,16 @@ void AFloorTile::SpawnItems()
 {
 	if (IsValid(SmallObstacleClass) && IsValid(BigObstacleClass) && IsValid(CoinClass))
 	{
-		SpawnLaneItems(CenterLane);
-		SpawnLaneItems(LeftLane);
-		SpawnLaneItems(RightLane);
+		int32 NumBig = 0;
+		SpawnLaneItems(CenterLane, NumBig);
+		SpawnLaneItems(LeftLane, NumBig);
+		SpawnLaneItems(RightLane, NumBig);
 	}
 	
 
 }
 
-void AFloorTile::SpawnLaneItems(UArrowComponent* Lane)
+void AFloorTile::SpawnLaneItems(UArrowComponent* Lane, int32& NumBig)
 {
 	const float RandVal = FMath::FRandRange(0.f, 1.f);
 
@@ -140,7 +143,20 @@ void AFloorTile::SpawnLaneItems(UArrowComponent* Lane)
 	}
 	else if (UKismetMathLibrary::InRange_FloatFloat(RandVal, SpawnPercent2, SpawnPercent3, true, true))
 	{
-		Obstacle = GetWorld()->SpawnActor<AObstacle>(BigObstacleClass, SpawnLocation, SpawnParams);
+		if (NumBig <= 2)
+		{
+			Obstacle = GetWorld()->SpawnActor<AObstacle>(BigObstacleClass, SpawnLocation, SpawnParams);
+
+			if (Obstacle)
+			{
+				NumBig += 1;
+			}
+		}
+		else
+		{
+			Obstacle = GetWorld()->SpawnActor<AObstacle>(SmallObstacleClass, SpawnLocation, SpawnParams);
+		}
+		
 	}
 	else if (UKismetMathLibrary::InRange_FloatFloat(RandVal, SpawnPercent3, 1.f, true, true))
 	{

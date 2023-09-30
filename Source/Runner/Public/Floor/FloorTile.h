@@ -41,7 +41,7 @@ protected:
 	void DestroyCoinObstacle();
 
 	UFUNCTION()
-	void SpawnLaneItems(UArrowComponent* Lane);
+	void SpawnLaneItems(UArrowComponent* Lane, int32& NumBig);
 
 
 	FTimerHandle CoinObstacleTimer;
