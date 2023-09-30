@@ -143,16 +143,13 @@ void AFloorTile::SpawnLaneItems(UArrowComponent* Lane, int32& NumBig)
 	}
 	else if (UKismetMathLibrary::InRange_FloatFloat(RandVal, SpawnPercent2, SpawnPercent3, true, true))
 	{
+		NumBig += 1;
+		UE_LOG(LogTemp, Warning, TEXT("NumBig: %d"), NumBig)
 		if (NumBig <= 2)
 		{
 			Obstacle = GetWorld()->SpawnActor<AObstacle>(BigObstacleClass, SpawnLocation, SpawnParams);
-
-			if (Obstacle)
-			{
-				NumBig += 1;
-			}
 		}
-		else
+		else if(NumBig == 3)
 		{
 			Obstacle = GetWorld()->SpawnActor<AObstacle>(SmallObstacleClass, SpawnLocation, SpawnParams);
 		}

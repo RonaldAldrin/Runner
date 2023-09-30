@@ -14,6 +14,18 @@ class RUNNER_API UGameHUD : public UUserWidget
 {
 	GENERATED_BODY()
 
+protected:
+
+	UFUNCTION()
+	void OnPauseClick();
+
+	virtual void NativeConstruct() override;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class UPauseMenu> PauseMenuWidgetClass;
+	UPROPERTY();
+	UPauseMenu* PauseMenu;
+
 public:
 
 	UFUNCTION(BlueprintCallable)
@@ -24,4 +36,8 @@ public:
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* CoinsCount;
 	
+	UPROPERTY(meta = (BindWidget))
+	class UButton* PauseButton;
+
+	bool bPauseButtonClick = false;
 };
