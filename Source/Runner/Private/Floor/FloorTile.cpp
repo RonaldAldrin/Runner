@@ -61,7 +61,7 @@ void AFloorTile::OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* 
 		RunGameMode->AddFloorTile(true);
 
 
-		GetWorldTimerManager().SetTimer(DestroyTimerHandle, this, &ThisClass::DestroyFloorTile, 1.f, false);
+		GetWorldTimerManager().SetTimer(DestroyTimerHandle, this, &ThisClass::DestroyFloorTile, 2.f, false);
 	}
 }
 
@@ -74,8 +74,11 @@ void AFloorTile::DestroyFloorTile()
 		GetWorldTimerManager().ClearTimer(DestroyTimerHandle);
 	}
 
-	for (AActor* Child : ChildActors)
+
+
+	for (int32 i = 0; i < ChildActors.Num() ; i++)
 	{
+		AActor* Child = ChildActors[i];
 		if (Child)
 		{
 			Child->Destroy();
@@ -84,9 +87,9 @@ void AFloorTile::DestroyFloorTile()
 
 	ChildActors.Empty();
 
-	RunGameMode->RemoveTile(this);
+	//RunGameMode->RemoveTile(this);
 
-	this->Destroy();
+	Destroy();
 
 }
 

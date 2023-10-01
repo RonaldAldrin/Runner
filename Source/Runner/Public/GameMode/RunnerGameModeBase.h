@@ -39,7 +39,7 @@ public:
 
 	void PlayerDied();
 
-	void RemoveTile(AFloorTile* Tile);
+	void RemoveTile(AFloorTile* ToRemoveTile);
 
 	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "Delegates")
 	FOnLevelReset OnLevelReset;
@@ -55,6 +55,9 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Config")
 	TSubclassOf<AFloorTile> FloorTileClass;
+
+	UPROPERTY()
+	AFloorTile* Tile;
 
 	UPROPERTY(VisibleInstanceOnly, Category = "Config")
 	UGameHUD* GameHUD;

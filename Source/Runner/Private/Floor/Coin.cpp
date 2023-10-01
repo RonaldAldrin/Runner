@@ -7,6 +7,8 @@
 #include "Character/RunCharacter.h"
 #include "Kismet/GameplayStatics.h"
 #include "Sound/SoundBase.h"
+#include "Floor/FloorTile.h"
+#include "GameMode/RunnerGameModeBase.h"
 
 ACoin::ACoin()
 {
@@ -45,6 +47,11 @@ void ACoin::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Ot
 		}
 
 		Character->AddCoin();
+		/*if (Character && Character->GetRunGameMode() && Character->GetRunGameMode()->Tile && Character->GetRunGameMode()->Tile->ChildActors.Contains(this))
+		{
+			Character->GetRunGameMode()->Tile->ChildActors.Remove(this);
+		}*/
+		
 
 		Destroy();
 	}

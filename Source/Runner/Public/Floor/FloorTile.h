@@ -93,10 +93,12 @@ private:
 	UPROPERTY(EditAnywhere)
 	float SpawnPercent3 = 0.5f;
 
-	TArray<AActor*> ChildActors;
+
 
 public:	
 	
+	TArray<AActor*> ChildActors;
+
 	const FTransform& GetAttachPointTransform() const;
 
 	FORCEINLINE UArrowComponent* GetLeftLane() const { return LeftLane; }

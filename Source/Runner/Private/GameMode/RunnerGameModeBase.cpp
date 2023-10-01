@@ -27,7 +27,7 @@ void ARunnerGameModeBase::BeginPlay()
 
 void ARunnerGameModeBase::CreateInitialFloorTiles()
 {
-	AFloorTile* Tile = AddFloorTile(false);
+	Tile = AddFloorTile(false);
 	if (Tile)
 	{
 		LaneSwitchValues.Add(Tile->GetLeftLane()->GetComponentLocation().Y);
@@ -55,19 +55,19 @@ AFloorTile* ARunnerGameModeBase::AddFloorTile(const bool bSpawnItems)
 	UWorld* World = GetWorld();
 	if (World)
 	{
-		AFloorTile* Tile = World->SpawnActor<AFloorTile>(FloorTileClass,NextSpawnPoint);
-		if (Tile)
+		AFloorTile* newTile = World->SpawnActor<AFloorTile>(FloorTileClass,NextSpawnPoint);
+		if (newTile)
 		{
-			FloorTiles.Add(Tile);
+			FloorTiles.Add(newTile);
 
 			if (bSpawnItems)
 			{
-				Tile->SpawnItems();
+				newTile->SpawnItems();
 			}
 
-			NextSpawnPoint = Tile->GetAttachPointTransform();
+			NextSpawnPoint = newTile->GetAttachPointTransform();
 		}
-		return Tile;
+		return newTile;
 	}
 	return nullptr;
 }
@@ -88,25 +88,30 @@ void ARunnerGameModeBase::AddCoin()
 
 void ARunnerGameModeBase::PlayerDied()
 {
-	NumberOfLives--;
+	NumberOfLives = FMath::Clamp(NumberOfLives - 1, 0, MaxLives);
 
 	GameHUD->SetLivesCount(NumberOfLives);
 	OnLivesCountChanged.Broadcast(NumberOfLives); 
 	if (NumberOfLives > 0)
 	{
 		// Iterate all FloorTiles and call DestroyFloorTile
-
-		for (AFloorTile* Tile : FloorTiles)
+		int32 j = FloorTiles.Num() -1;
+		AFloorTile* Tiles = FloorTiles[j];
+		for (auto oldTile : FloorTiles )
 		{
-			Tile->DestroyFloorTile();
+			if (oldTile)
+			{
+				oldTile->DestroyFloorTile();
+			}
+			
+				
 		}
 
-	
 		// Empty our array
 		FloorTiles.Empty();
 
 		// NextSpawnPoint to initial value
-		NextSpawnPoint = FTransform();
+		NextSpawnPoint = FTransform{};
 
 		// create out initial floor tiles
 		CreateInitialFloorTiles();
@@ -114,13 +119,12 @@ void ARunnerGameModeBase::PlayerDied()
 		// Broadcast level reset event
 		OnLevelReset.Broadcast();
 	}
-	else
-	{
-		// GameOver();
-	}
+
+
+	
 }
 
-void ARunnerGameModeBase::RemoveTile(AFloorTile* Tile)
+void ARunnerGameModeBase::RemoveTile(AFloorTile* ToRemoveTile)
 {
-	FloorTiles.Remove(Tile);
+	FloorTiles.Remove(ToRemoveTile);
 }
