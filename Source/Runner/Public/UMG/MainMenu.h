@@ -14,4 +14,19 @@ class RUNNER_API UMainMenu : public UUserWidget
 {
 	GENERATED_BODY()
 	
+protected:
+
+	virtual void NativeConstruct() override;
+
+	UFUNCTION()
+	void OnStartClick();
+
+	UFUNCTION()
+	void OnQuitClick();
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton* StartButton;
+
+	UPROPERTY(meta = (BindWidget))
+	UButton* QuitButton;
 };

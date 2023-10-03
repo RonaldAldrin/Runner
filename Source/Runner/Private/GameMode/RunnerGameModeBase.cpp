@@ -7,6 +7,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "UMG/GameHUD.h"
 #include "Components/TextBlock.h"
+#include "UMG/GameOver.h"
 
 void ARunnerGameModeBase::BeginPlay()
 {
@@ -119,12 +120,25 @@ void ARunnerGameModeBase::PlayerDied()
 		// Broadcast level reset event
 		OnLevelReset.Broadcast();
 	}
-
-
-	
+	else
+	{
+		GameOver();
+	}
 }
 
 void ARunnerGameModeBase::RemoveTile(AFloorTile* ToRemoveTile)
 {
 	FloorTiles.Remove(ToRemoveTile);
+}
+
+void ARunnerGameModeBase::GameOver()
+{
+	if (IsValid(GameOverClass))
+	{
+		UGameOver* Widget = CreateWidget<UGameOver>(GetWorld(), GameOverClass);
+		if (Widget)
+		{
+			Widget->AddToViewport();
+		}
+	}
 }

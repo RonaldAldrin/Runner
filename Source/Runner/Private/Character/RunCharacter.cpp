@@ -218,7 +218,7 @@ void ARunCharacter::Die()
 
 void ARunCharacter::OnDeathFinished()
 {
-	bIsDead = false;
+	
 	if (DeathTimer.IsValid())
 	{
 		GetWorldTimerManager().ClearTimer(DeathTimer);

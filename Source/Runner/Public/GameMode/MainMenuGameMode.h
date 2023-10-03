@@ -13,5 +13,13 @@ UCLASS()
 class RUNNER_API AMainMenuGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
+
+public:
+
+	UPROPERTY(EditAnywhere, Category = "Config")
+	TSubclassOf<class UMainMenu> MainMenuClass;
+
+	virtual void BeginPlay() override;
+
 	
 };

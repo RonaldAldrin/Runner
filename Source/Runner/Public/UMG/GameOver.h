@@ -14,4 +14,19 @@ class RUNNER_API UGameOver : public UUserWidget
 {
 	GENERATED_BODY()
 	
+protected:
+
+	virtual void NativeConstruct() override;
+
+	UFUNCTION()
+	void OnMainMenuClick();
+
+	UFUNCTION()
+	void OnRestartClick();
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton* MainMenuButton;
+
+	UPROPERTY(meta = (BindWidget))
+	UButton* RestartButton;
 };

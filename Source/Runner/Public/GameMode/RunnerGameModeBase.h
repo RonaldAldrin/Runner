@@ -12,6 +12,7 @@
 class AFloorTile;
 class UUserWidget;
 class UGameHUD;
+class UGameOver;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCoinsCountChanged, int32, CoinsCount);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLivesCountChanged, int32, LivesCount);
@@ -41,6 +42,8 @@ public:
 
 	void RemoveTile(AFloorTile* ToRemoveTile);
 
+	void GameOver();
+
 	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "Delegates")
 	FOnLevelReset OnLevelReset;
 
@@ -55,6 +58,9 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Config")
 	TSubclassOf<AFloorTile> FloorTileClass;
+
+	UPROPERTY(EditAnywhere, Category = "Config")
+	TSubclassOf<UGameOver> GameOverClass;
 
 	UPROPERTY()
 	AFloorTile* Tile;
