@@ -8,6 +8,8 @@
 #include "UMG/GameHUD.h"
 #include "Components/TextBlock.h"
 #include "UMG/GameOver.h"
+#include "Character/RunCharacter.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 void ARunnerGameModeBase::BeginPlay()
 {
@@ -77,10 +79,30 @@ void ARunnerGameModeBase::AddCoin()
 {
 	TotalCoins += 1;
 
-	GameHUD->SetCoinsCount(TotalCoins);
+	//GameHUD->SetCoinsCount(TotalCoins);
 	OnCoinsCountChanged.Broadcast(TotalCoins); 
 
-
+	
+	
+	APlayerController* Controller = UGameplayStatics::GetPlayerController(this, 0);
+	if (Controller)
+	{
+		ARunCharacter* Character = Cast<ARunCharacter>(Controller->GetPawn());
+		if (Character)
+		{
+			
+			if (TotalCoins > 30)Character->GetCharacterMovement()->MaxWalkSpeed = 2000.f;
+			if (TotalCoins > 50)Character->GetCharacterMovement()->MaxWalkSpeed = 3000.f;
+			if (TotalCoins > 100)Character->GetCharacterMovement()->MaxWalkSpeed = 4500.f;
+			
+		}
+		
+			
+	}
+		
+	
+		
+	
 	/*FString Coin = FString::Printf(TEXT("%d"), TotalCoins);
 	GameHUD->CoinsCount->SetText(FText::FromString(Coin));*/
 
@@ -91,7 +113,7 @@ void ARunnerGameModeBase::PlayerDied()
 {
 	NumberOfLives = FMath::Clamp(NumberOfLives - 1, 0, MaxLives);
 
-	GameHUD->SetLivesCount(NumberOfLives);
+	//GameHUD->SetLivesCount(NumberOfLives);
 	OnLivesCountChanged.Broadcast(NumberOfLives); 
 	if (NumberOfLives > 0)
 	{

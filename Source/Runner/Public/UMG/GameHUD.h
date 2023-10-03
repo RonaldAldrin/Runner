@@ -31,8 +31,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void InitializedHUD(ARunnerGameModeBase* GameMode);
 
+	UFUNCTION()
 	void SetCoinsCount(const int32 Coin);
 
+	UFUNCTION()
 	void SetLivesCount(int32 Lives);
 
 	UPROPERTY(meta = (BindWidget))
