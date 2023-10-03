@@ -13,6 +13,7 @@ void UPauseMenu::NativeConstruct()
 	{
 		ContinueButton->OnClicked.AddDynamic(this, &ThisClass::OnContinueClick);
 		RestartButton->OnClicked.AddDynamic(this, &ThisClass::OnRestartClick);
+		QuitButton->OnClicked.AddDynamic(this, &ThisClass::OnQuitClick);
 	}
 	if (GameHUD)
 	{
@@ -29,11 +30,12 @@ void UPauseMenu::OnContinueClick()
 {
 	UGameplayStatics::SetGamePaused(this, false);
 	//SetVisibility(ESlateVisibility::Collapsed);
-	RemoveFromParent();
+	
 	if (GameHUD)
 	{
 		GameHUD->bPauseButtonClick = false;
 	}
+	RemoveFromParent();
 }
 
 void UPauseMenu::OnRestartClick()
@@ -45,6 +47,16 @@ void UPauseMenu::OnRestartClick()
 		//UGameplayStatics::OpenLevel(this, FName("TestMap"));
 	}
 	
+}
+
+void UPauseMenu::OnQuitClick()
+{
+	UWorld* World = GetWorld();
+	if (World)
+	{
+		UKismetSystemLibrary::ExecuteConsoleCommand(World, TEXT("Quit"));
+		//UKismetSystemLibrary::QuitGame(GetWorld(),UGameplayStatics::GetPlayerController(this,0),EQuitPreference::Quit,true);
+	}
 }
 
 

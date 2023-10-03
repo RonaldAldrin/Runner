@@ -23,6 +23,9 @@ protected:
 
 	UFUNCTION()
 	void OnRestartClick();
+
+	UFUNCTION()
+	void OnQuitClick();
 	
 public:
 
@@ -35,4 +38,7 @@ public:
 
 	UPROPERTY(meta = (BindWidget))
 	UButton* RestartButton;
+
+	UPROPERTY(meta = (BindWidget))
+	UButton* QuitButton;
 };

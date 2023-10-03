@@ -3,6 +3,7 @@
 
 #include "GameMode/MainMenuGameMode.h"
 #include "UMG/MainMenu.h"
+#include "Kismet/GameplayStatics.h"
 
 void AMainMenuGameMode::BeginPlay()
 {
@@ -15,4 +16,5 @@ void AMainMenuGameMode::BeginPlay()
 		}
 
 	}
+	UGameplayStatics::GetPlayerController(this, 0)->SetShowMouseCursor(true);
 }

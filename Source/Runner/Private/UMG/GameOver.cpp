@@ -5,6 +5,7 @@
 #include "Components/Button.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/GameplayStatics.h"
+#include "UMG/GameHUD.h"
 
 void UGameOver::NativeConstruct()
 {
@@ -15,6 +16,7 @@ void UGameOver::NativeConstruct()
 		MainMenuButton->OnClicked.AddDynamic(this, &ThisClass::OnMainMenuClick);
 		RestartButton->OnClicked.AddDynamic(this, &ThisClass::OnRestartClick);
 	}
+
 }
 
 void UGameOver::OnMainMenuClick()

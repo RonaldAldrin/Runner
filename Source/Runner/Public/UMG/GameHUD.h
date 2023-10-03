@@ -23,6 +23,7 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class UPauseMenu> PauseMenuWidgetClass;
+
 	UPROPERTY();
 	UPauseMenu* PauseMenu;
 

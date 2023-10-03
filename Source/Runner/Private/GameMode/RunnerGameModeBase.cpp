@@ -161,6 +161,7 @@ void ARunnerGameModeBase::GameOver()
 		if (Widget)
 		{
 			Widget->AddToViewport();
+			GameHUD->bPauseButtonClick = true;
 		}
 	}
 }

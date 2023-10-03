@@ -8,27 +8,32 @@
 #include "Blueprint/WidgetBlueprintLibrary.h"
 #include "Kismet/GameplayStatics.h"
 #include "UMG/PauseMenu.h"
+#include "UMG/GameOver.h"
 
 void UGameHUD::NativeConstruct()
 {
 	Super::NativeConstruct();
 
+	if (PauseMenuWidgetClass)
+	{
+		PauseMenu = CreateWidget<UPauseMenu>(GetWorld(), PauseMenuWidgetClass);
+		if (PauseMenu)
+		{
+			PauseMenu->SetGameHUD(this);
+		}
+	}
+
 	if (PauseButton)
 	{
 		PauseButton->OnClicked.AddDynamic(this, &UGameHUD::OnPauseClick);
 	}
-
-	PauseMenu = CreateWidget<UPauseMenu>(GetWorld(), PauseMenuWidgetClass);
-	if (PauseMenu)
-	{
-		PauseMenu->SetGameHUD(this);
-	}
-	
+	bPauseButtonClick = false;
 
 	UWidgetBlueprintLibrary::SetInputMode_GameAndUIEx(UGameplayStatics::GetPlayerController(this, 0));
 	//FInputModeGameAndUI GameandUI;
 	//UGameplayStatics::GetPlayerController(this, 0)->SetInputMode(GameandUI);
 }
+
 
 void UGameHUD::InitializedHUD(ARunnerGameModeBase* GameMode)
 {
@@ -56,23 +61,20 @@ void UGameHUD::SetLivesCount(const int32 Lives)
 void UGameHUD::OnPauseClick()
 {
 	if (bPauseButtonClick) return;
-
 	bPauseButtonClick = true;
+
 	
-
-	if (IsValid(PauseMenuWidgetClass))
+	UGameplayStatics::SetGamePaused(this, true);
+	if (PauseMenuWidgetClass)
 	{
-
-		bPauseButtonClick = true;
-
-		UGameplayStatics::SetGamePaused(this, true);
-		PauseMenu == nullptr ? CreateWidget<UPauseMenu>(GetWorld(), PauseMenuWidgetClass) : PauseMenu;
+		PauseMenu = PauseMenu == nullptr ? CreateWidget<UPauseMenu>(GetWorld(), PauseMenuWidgetClass) : PauseMenu;
 		if (PauseMenu)
 		{
+			PauseMenu->SetGameHUD(this);
 			PauseMenu->AddToViewport();
+
 			
 		}
 	}
-	
 }
 
